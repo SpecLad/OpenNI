@@ -1018,9 +1018,12 @@ XN_THREAD_PROC xnUSBReadThreadMain(XN_THREAD_PARAM pThreadParam)
 		
 		// submit request
 		pBufferInfo->bIsQueued = TRUE;
+		pBufferInfo->bIsSubmitted = TRUE;
 		int rc = libusb_submit_transfer(pTransfer);
 		if (rc != 0)
 		{
+			pBufferInfo->bIsQueued = FALSE;
+			pBufferInfo->bIsSubmitted = FALSE;
 			xnLogError(XN_MASK_USB, "Endpoint 0x%x, Buffer %d: Failed to submit asynch I/O transfer (err=%d)!", pTransfer->endpoint, pBufferInfo->nBufferID, rc);
 		}
 	}
@@ -1039,6 +1042,8 @@ XN_THREAD_PROC xnUSBReadThreadMain(XN_THREAD_PARAM pThreadParam)
 
 			XnUSBBuffersInfo* pBufferInfo = &pThreadData->pBuffersInfo[i];
 			libusb_transfer* pTransfer = pBufferInfo->transfer;
+
+			if (!pBufferInfo->bIsSubmitted) continue;
 
 			// wait for the next transfer to be completed, and process it
 			nRetVal = xnOSWaitEvent(pBufferInfo->hEvent, pThreadData->bKillReadThread ? 0 : pThreadData->nTimeOut);
@@ -1071,6 +1076,8 @@ XN_THREAD_PROC xnUSBReadThreadMain(XN_THREAD_PARAM pThreadParam)
 			}
 			else // transfer done
 			{
+				pBufferInfo->bIsSubmitted = FALSE;
+
 				if (pBufferInfo->nLastStatus == LIBUSB_TRANSFER_COMPLETED || // read succeeded
 					pBufferInfo->nLastStatus == LIBUSB_TRANSFER_CANCELLED)   // cancelled, but maybe some data arrived
 				{
@@ -1124,9 +1131,12 @@ XN_THREAD_PROC xnUSBReadThreadMain(XN_THREAD_PARAM pThreadParam)
 				if (!pBufferInfo->pThreadData->bKillReadThread)
 				{
 					pBufferInfo->bIsQueued = TRUE;
+					pBufferInfo->bIsSubmitted = TRUE;
 					int rc = libusb_submit_transfer(pTransfer);
 					if (rc != 0)
 					{
+						pBufferInfo->bIsQueued = FALSE;
+						pBufferInfo->bIsSubmitted = FALSE;
 						xnLogError(XN_MASK_USB, "Endpoint 0x%x, Buffer %d: Failed to re-submit asynch I/O transfer (err=%d)!", pTransfer->endpoint, pBufferInfo->nBufferID, rc);
 					}
 				}
