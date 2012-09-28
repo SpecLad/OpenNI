@@ -55,6 +55,8 @@ typedef struct XnUSBBuffersInfo
 	libusb_transfer* transfer;
 	/* TRUE when transfer is queued. */
 	XnBool bIsQueued;
+	/* TRUE when transfer has been submitted. */
+	XnBool bIsSubmitted;
 	/* An event to notify when buffer is ready. */
 	XN_EVENT_HANDLE hEvent;
 	XnUInt32 nBufferID;
@@ -82,7 +84,7 @@ typedef struct XnUSBReadThreadData
 	/* Handle to the read thread. */
 	XN_THREAD_HANDLE hReadThread;
 	/* When TRUE, signals the thread to exit. */
-	XnBool bKillReadThread;
+	volatile XnBool bKillReadThread;
 } XnUSBReadThreadData;
 
 typedef struct XnUSBEndPointHandle
