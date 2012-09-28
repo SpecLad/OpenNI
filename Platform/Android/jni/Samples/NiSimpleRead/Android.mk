@@ -11,7 +11,7 @@ LOCAL_C_INCLUDES :=
 
 LOCAL_CFLAGS:= -fvisibility=hidden -DXN_EXPORTS
 
-LOCAL_SHARED_LIBRARIES := libc libusb OpenNI
+LOCAL_SHARED_LIBRARIES := libc libusb-1.0 OpenNI
 
 LOCAL_MODULE := Sample-SimpleRead
 
