@@ -30,7 +30,9 @@ public class ProductionNode extends NodeWrapper
 	
 	public static ProductionNode fromNative(long hNode) throws GeneralException
 	{
-		return Context.createProductionNodeFromNative(hNode);
+		ProductionNode node = Context.createProductionNodeFromNative(hNode);
+		NativeMethods.xnProductionNodeRelease(hNode);
+		return node;
 	}
 	
 	public NodeInfo getInfo() throws GeneralException

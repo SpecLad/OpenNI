@@ -85,7 +85,9 @@ public class Context extends ObjectWrapper
 		OutArg<Long> phPlayer = new OutArg<Long>();
 		int status = NativeMethods.xnContextOpenFileRecordingEx(toNative(), fileName, phPlayer);
 		WrapperUtils.throwOnError(status);
-		return (Player)createProductionNodeFromNative(phPlayer.value);
+		Player player = (Player) createProductionNodeFromNative(phPlayer.value);
+		NativeMethods.xnProductionNodeRelease(phPlayer.value);
+		return player;
 	}
 	
 	public void release()
@@ -129,7 +131,9 @@ public class Context extends ObjectWrapper
 		OutArg<Long> phNode = new OutArg<Long>();
 		int status = NativeMethods.xnCreateProductionTree(toNative(), nodeInfo.toNative(), phNode);
 		WrapperUtils.throwOnError(status);
-		return createProductionNodeObject(phNode.value);
+		ProductionNode node = createProductionNodeObject(phNode.value);
+		NativeMethods.xnProductionNodeRelease(phNode.value);
+		return node;
 	}
 	
 	public ProductionNode createAnyProductionTree(NodeType type, Query query) throws GeneralException
@@ -141,7 +145,9 @@ public class Context extends ObjectWrapper
 				phNode,
 				errors.toNative());
 		WrapperUtils.checkEnumeration(status, errors);
-		return createProductionNodeFromNative(phNode.value);
+		ProductionNode node = createProductionNodeFromNative(phNode.value);
+		NativeMethods.xnProductionNodeRelease(phNode.value);
+		return node;
 	}
 
 	public NodeInfoList enumerateExistingNodes() throws GeneralException
@@ -376,6 +382,11 @@ public class Context extends ObjectWrapper
 		long pNodeInfo = NativeMethods.xnGetNodeInfo(hNode);
 		NodeType type = NativeMethods.xnNodeInfoGetDescription(pNodeInfo).getType();
 		return createProductionNodeObject(hNode, type);
+	}
+
+	void removeProductionNodeObject(long hNode)
+	{
+		this.allNodes.remove(hNode);
 	}
 
 	private Observable<ErrorStateEventArgs> errorStateChangedEvent;

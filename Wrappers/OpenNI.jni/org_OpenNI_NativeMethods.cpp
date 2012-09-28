@@ -699,8 +699,10 @@ jobject CreateProductionNodeDescription(JNIEnv *env, const XnProductionNodeDescr
 	jclass cls = env->FindClass("org/OpenNI/ProductionNodeDescription");
 	jmethodID clsCtor = env->GetMethodID(cls, "<init>", "(ILjava/lang/String;Ljava/lang/String;Lorg/OpenNI/Version;)V");
 
+	jstring vendor = env->NewStringUTF(pDesc->strVendor);
+	jstring name = env->NewStringUTF(pDesc->strName);
 	jobject version = CreateVersion(env, &pDesc->Version);
-	return env->NewObject(cls, clsCtor, pDesc->Type, pDesc->strVendor, pDesc->strName, version);
+	return env->NewObject(cls, clsCtor, pDesc->Type, vendor, name, version);
 }
 
 //---------------------------------------------------------------------------

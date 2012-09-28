@@ -46,7 +46,9 @@ public class NodeInfo extends ObjectWrapper
 	public ProductionNode getInstance() throws GeneralException
 	{
 		long hNode = NativeMethods.xnNodeInfoGetRefHandle(toNative());
-		return Context.createProductionNodeFromNative(hNode);
+		ProductionNode node = Context.createProductionNodeFromNative(hNode);
+		NativeMethods.xnProductionNodeRelease(hNode);
+		return node;
 	}
 	
 	@Override

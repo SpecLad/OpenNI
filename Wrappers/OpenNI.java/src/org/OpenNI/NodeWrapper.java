@@ -47,6 +47,7 @@ public class NodeWrapper extends ObjectWrapper
 
 	protected void freeObject(long ptr)
 	{
+		context.removeProductionNodeObject(ptr);
 		NativeMethods.xnProductionNodeRelease(ptr);
 	}
 	
