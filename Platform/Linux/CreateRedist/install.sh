@@ -74,7 +74,7 @@ fi
 INSTALL_LIB=$rootfs/usr/lib
 INSTALL_BIN=$rootfs/usr/bin
 INSTALL_INC=$rootfs/usr/include/ni
-INSTALL_VAR=$rootfs/var/lib/ni
+INSTALL_VAR=$rootfs/etc/openni
 INSTALL_JAR=$rootfs/usr/share/java
 
 # make all calls into OpenNI run in this filesystem
