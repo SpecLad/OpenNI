@@ -25,7 +25,7 @@ LOCAL_C_INCLUDES := \
 
 LOCAL_CFLAGS:= -fvisibility=hidden -DXN_EXPORTS
 
-LOCAL_LDFLAGS += -Wl,--export-dynamic --dynamic-linker
+LOCAL_LDFLAGS += -Wl,--export-dynamic
 
 LOCAL_LDLIBS := -llog
 LOCAL_LDLIBS += $(OPENNI_DIR)/Platform/Android/libs/armeabi-v7a/libOpenNI.so
