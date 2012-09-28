@@ -87,8 +87,8 @@ XN_THREAD_PROC xnProfilingThread(XN_THREAD_PARAM /*pThreadParam*/)
 		// print profiled sections
 		nReportChars = 0;
 		nReportChars += sprintf(csReport + nReportChars, "Profiling Report:\n");
-		nReportChars += sprintf(csReport + nReportChars, "%-*s %-5s %-6s %-9s %-7s\n", g_ProfilingData.nMaxSectionName, "TaskName", "Times", "% Time", "TotalTime", "AvgTime");
-		nReportChars += sprintf(csReport + nReportChars, "%-*s %-5s %-6s %-9s %-7s\n", g_ProfilingData.nMaxSectionName, "========", "=====", "======", "=========", "=======");
+		nReportChars += sprintf(csReport + nReportChars, "%-*s %-5s %-6s %-9s %-7s\n", (int)g_ProfilingData.nMaxSectionName, "TaskName", "Times", "% Time", "TotalTime", "AvgTime");
+		nReportChars += sprintf(csReport + nReportChars, "%-*s %-5s %-6s %-9s %-7s\n", (int)g_ProfilingData.nMaxSectionName, "========", "=====", "======", "=========", "=======");
 
 		XnUInt64 nTotalTime = 0;
 
@@ -104,7 +104,7 @@ XN_THREAD_PROC xnProfilingThread(XN_THREAD_PARAM /*pThreadParam*/)
 				nAvgTime = pSection->nTotalTime / pSection->nTimesExecuted;
 			}
 
-			nReportChars += sprintf(csReport + nReportChars, "%-*s %5u %6.2f %9llu %7llu\n", g_ProfilingData.nMaxSectionName, 
+			nReportChars += sprintf(csReport + nReportChars, "%-*s %5u %6.2f %9llu %7llu\n", (int)g_ProfilingData.nMaxSectionName,
 				pSection->csName, pSection->nTimesExecuted, dCPUPercentage, pSection->nTotalTime, nAvgTime);
 
 			if (pSection->nIndentation == 0)
@@ -118,7 +118,7 @@ XN_THREAD_PROC xnProfilingThread(XN_THREAD_PARAM /*pThreadParam*/)
 		// print total
 		XnDouble dCPUPercentage = ((XnDouble)nTotalTime) / (nNow - nLastTime) * 100.0;
 		nReportChars += sprintf(csReport + nReportChars, "%-*s %5s %6.2f %9llu %7s\n", 
-			g_ProfilingData.nMaxSectionName, "*** Total ***", "-", dCPUPercentage, nTotalTime, "-");
+			(int)g_ProfilingData.nMaxSectionName, "*** Total ***", "-", dCPUPercentage, nTotalTime, "-");
 
 		xnLogVerbose(XN_MASK_PROFILING, "%s", csReport);
 
